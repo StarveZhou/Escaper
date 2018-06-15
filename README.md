@@ -20,3 +20,5 @@ blankspace / mouse click | fire
 * 捡到的武器添加总子弹数量限制
 
 * 更智能的ai
+
+* 鼠标定位不准确
