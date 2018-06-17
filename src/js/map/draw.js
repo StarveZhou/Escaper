@@ -41,3 +41,8 @@ function drawLine(obj) {
 function clearAll() {
     context.clearRect(0, 0, WIDTH, HEIGHT);
 }
+
+function playSound(sound) {
+    sound.load();
+    sound.play();
+}

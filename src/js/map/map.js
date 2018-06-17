@@ -73,6 +73,23 @@ function drawMonster() {
     while (refreshMonsterBox());
 }
 
+function drawOptionCir() {
+    //console.log(newGameOption);
+    //console.log(continueGameOption);
+    if (newGameOption.isOn == true && checkContainedCir(newGameOption.main)){
+        drawFrameCir(newGameOption.main.getMObj());
+        drawFrameWords(newGameOption.textObj);
+    }
+    if (continueGameOption.isOn == true && checkContainedCir(continueGameOption.main)){
+        drawFrameCir(continueGameOption.main.getMObj());
+        drawFrameWords(continueGameOption.textObj);
+    }
+    if (testGameOption.isOn == true && checkContainedCir(testGameOption.main)){
+        drawFrameCir(testGameOption.main.getMObj());
+        drawFrameWords(testGameOption.textObj);
+    }
+}
+
 function drawGame() {
     drawMapLine();
     drawMonster();
@@ -80,4 +97,11 @@ function drawGame() {
     drawReward();
     drawBullet();
     drawFrame();
+}
+
+function drawOption() {
+    drawMapLine();
+    drawOptionCir();
+    drawHero();
+    drawOptionFrame();
 }

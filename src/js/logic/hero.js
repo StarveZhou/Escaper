@@ -70,6 +70,9 @@ function Hero(body, speed) {
 
     this.refresh = function (moveHor, moveVer, mouseX, mouseY) {
         if (this.changeBulletStage != 0){
+            if (this.changeBulletStage == 1){
+                playSound(changeWeaponSound);
+            }
             this.changeBulletStage += 1;
             if (this.changeBulletStage > this.weaponList[this.weaponID].cspeed){
                 this.changeBulletStage = 0;
@@ -112,7 +115,8 @@ function Hero(body, speed) {
     }
 
     this.rewardWeapon = function(wea){
-        for (var id in weaponList){
+        console.log(wea);
+        for (var id in this.weaponList){
             if (this.weaponList[id].name == wea.name){
                 if (this.weaponList[id].capacity < 30){
                     ulog(wea.name + " capacity + 1");
@@ -126,13 +130,13 @@ function Hero(body, speed) {
             }
         }
         ulog("receive weapon : " + wea.name);
-        weaponList.push(deepCloneWeapon(wea));
+        this.weaponList.push(deepCloneWeapon(wea));
     }
 
     this.receiveReward = function(reward){
-        console.log("in", reward);
         if (reward.type.id == 0){
-            console.log(reward, reward.type.weapon);
+            console.log(reward.type.weapon);
+            console.log(weaponList, weaponList[reward.type.weapon]);
             this.rewardWeapon(weaponList[reward.type.weapon]);
         }
         else if (reward.type.id == 1){
@@ -170,8 +174,61 @@ function Hero(body, speed) {
         ulog("you get hit");
 
         if (this.HP == 0){
-            alert("you are killed!");
-            gameStop = true;
+            this.die();
         }
+        else{
+            playSound(heroHurtSound);
+        }
+    }
+
+    this.die = function () {
+        playSound(gameOverSound);
+        alert("you are killed!");
+
+        gameState = 0;
+    }
+
+    this.init = function () {
+        this.weaponList.splice(0, this.weaponList.length);
+        this.weaponList.push(deepCloneWeapon(pistolWeapon));
+        this.weaponID = 0;
+        this.bulletCount = pistolWeapon.capacity;
+
+        this.speed = 10;
+        this.score = 0;
+        this.lastScore = 0;
+        this.aspeedStage = 0;
+        this.changeBulletStage = 0;
+        this.HP = 8;
+    }
+
+    this.tempPosi = null;
+
+    this.storePosi = function () {
+        this.tempPosi = {
+            x : this.main.x,
+            y : this.main.y
+        };
+    }
+    this.loadPosi = function () {
+        this.main.x = this.tempPosi.x;
+        this.main.y = this.tempPosi.y;
+    }
+
+    this.testInit = function () {
+        this.weaponList.splice(0, this.weaponList.length);
+        this.weaponList.push(deepCloneWeapon(pistolWeapon));
+        this.weaponList.push(deepCloneWeapon(subMachineWeapon));
+        this.weaponList.push(deepCloneWeapon(cannonWeapon));
+        this.weaponList.push(deepCloneWeapon(shotGunWeapon));
+        this.weaponID = 0;
+        this.bulletCount = pistolWeapon.capacity;
+
+        this.speed = 10;
+        this.score = 0;
+        this.lastScore = 0;
+        this.aspeedStage = 0;
+        this.changeBulletStage = 0;
+        this.HP = 8;
     }
 }

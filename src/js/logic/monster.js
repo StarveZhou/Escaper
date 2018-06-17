@@ -59,3 +59,10 @@ function refreshMonsterBox() {
     }
     return isChanged;
 }
+
+function monsterInit() {
+    while (monsterBox.length != 0){
+        var monster = monsterBox.pop();
+        monsterPool.push(monster);
+    }
+}

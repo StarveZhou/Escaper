@@ -53,8 +53,8 @@ function containPoint(x, y, xMin, xMax, yMin, yMax) {
 
 //在圆心为(x, y)，半径为r的圆内随机生成点。
 function randomPos(x, y, r) {
-    var R = 2 * (r * (Math.random() - 0.5));
-    var dx = Math.random() + 0.5, dy = Math.random() + 0.5;
+    var R = 2 * (r * (Math.random() + 0.5));
+    var dx = Math.random() - 0.5, dy = Math.random() - 0.5;
 
     return {
         x : x + dx * R,
@@ -71,4 +71,15 @@ function isCollided(a, b){
 
 function ulog(text) {
     frameLogTextObj.text = "[" + frameCount + "]" + text;
+}
+
+function rotateVec(x, y, angle) {
+    var an = 2 * PI * angle / 360;
+    var si = Math.sin(an);
+    var co = Math.cos(an);
+
+    return {
+        x : (x*co + y * si) / sqrt2,
+        y : (-1 * x * si + y * co)/sqrt2
+    };
 }

@@ -41,6 +41,11 @@ function drawFrame() {
     drawLog();
 }
 
+function drawOptionFrame() {
+    drawOuterFrame();
+    drawLog();
+}
+
 function drawClip(count) {
     for (var i=0; i<count; i++){
         var bullet = deepClone(frameClipBulletRecObj);
@@ -51,6 +56,7 @@ function drawClip(count) {
     }
     var words = deepClone(frameClipLeftWordsObj);
     if (count == 0) words.text = "CHANGING";
+    else if (hero.aspeedStage != 0) words.text = "LOADING";
     else words.text += " : " + count;
     words.y = clipBaseHeight - count*clipShiftHeight;
     drawWords(words);
@@ -116,3 +122,9 @@ function drawFrameRect(obj) {
     drawRect(nobj);
 }
 
+function drawFrameWords(obj) {
+    var nobj = deepClone(obj);
+    nobj.x += gameShiftWidth - cameraX;
+    nobj.y += gameShiftHeight - cameraY;
+    drawWords(nobj);
+}

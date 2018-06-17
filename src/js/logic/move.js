@@ -33,27 +33,48 @@ document.onkeyup = function (ev) {
         moveHor = 0;
     }
     else if (ev.keyCode == KEY_Q){
-        hero.changeWeapon(-1);
+        if (gameState == 1){
+            hero.changeWeapon(-1);
+        }
     }
     else if (ev.keyCode == KEY_E){
-        hero.changeWeapon(1);
+        if (gameState == 1){
+            hero.changeWeapon(1);
+        }
     }
     else if (ev.keyCode == KEY_ENTER){
-        gameStop = ~gameStop;
-        refresh();
+        if (gameState == 1){
+            gameState = 2;
+            refreshOptionPosi();
+        }
     }
     else if (ev.keyCode == KEY_R){
-        hero.reload();
+        if (gameState == 1){
+            hero.reload();
+        }
+    }
+    else if (ev.keyCode == KEY_N){
+        if (testMode == 1){
+            monsterBox.push(getMonsterEntry(monsterClassList[4]));
+        }
+    }
+    else if (ev.keyCode == KEY_M){
+        if (testMode == 1){
+            ulog("award is set");
+            rewardBox.push(getRewardEntry());
+        }
     }
     //console.log("up", moveHor, moveVer);
 }
 
 document.onmousemove = function (ev) {
-    mouseX = ev.pageX - mouseXShift;
-    mouseY = ev.pageY - mouseYShift;
+    mouseX = ev.pageX - mouseXShift - gameShiftWidth;
+    mouseY = ev.pageY - mouseYShift - gameShiftHeight;
     //console.log(ev.pageX, ev.pageY);
 }
 
 document.onmousedown = function (ev) {
-    hero.fire()
+    if (gameState == 1){
+        hero.fire()
+    }
 }

@@ -4,6 +4,7 @@ PREDEF
 
 var WIDTH = 1350, HEIGHT = 640;
 var PI = 3.141592654;
+var sqrt2 = Math.sqrt(2.0);
 
 var gameWidth = 1200, gameHeight = 500;
 var gameShiftWidth = 75, gameShiftHeight = 40;
@@ -189,7 +190,7 @@ var moveHor = 0, moveVer = 0;
 
 //MOUSE
 var mouseX = WIDTH, mouseY=HEIGHT;
-var mouseXShift = 8, mouseYShift = 8;
+var mouseXShift = 0, mouseYShift = 0;
 
 /**
 KEY_CODE
@@ -207,6 +208,8 @@ var KEY_D = 68;
 var KEY_Q = 81;
 var KEY_E = 69;
 var KEY_R = 82;
+var KEY_M = 77;
+var KEY_N = 78;
 
 var KEY_SB = 32;//spacebar
 
@@ -219,7 +222,6 @@ GAME_STATE
  */
 var gameCount = 0;
 
-var gameStop = false;
 
 /**
 POOL
@@ -227,6 +229,19 @@ POOL
 var bulletPool = [];
 var rewardPool = [];
 var monsterPool = [];
+
+/**
+Sound
+ */
+var bulletSound1 = new Audio("http://ydown.smzy.com/yinpin/2010-3/smzy_201032651845439.mp3");
+var bulletSound2 = new Audio("http://ydown.smzy.com/yinpin/2010-3/smzy_201032651933834.mp3");
+var bulletSound3 = new Audio("http://ydown.smzy.com/yinpin/2014-5/smzy_2014052601.mp3");
+var bulletSound4 = new Audio("http://ydown.smzy.com/yinpin/2014-3/smzy_2014031106.mp3");//霰弹枪
+
+var changeWeaponSound = new Audio("http://ydown.smzy.com/yinpin/2014-6/smzy_2014061003.mp3");
+
+var gameOverSound = new Audio("http://ydown.smzy.com/yinpin/2017-08/smzy2017082404.wav");
+var heroHurtSound = new Audio("http://ydown.smzy.com/yinpin/2013-5/smzy_201352222017242.mp3");
 
 
 
@@ -239,7 +254,7 @@ var pistolWeapon = new Weapon(new thing(0, 0, 10,
         strokeColor : "#000000",
         fillColor : "#003366"
     }
-    ), 20, 10, 100, 1, 10, 200, "pistol");
+    ), 20, 10, 100, 1, 10, 200, "pistol", bulletSound1);
 
 var subMachineWeapon = new Weapon(new thing(0, 0, 14,
     {
@@ -247,7 +262,7 @@ var subMachineWeapon = new Weapon(new thing(0, 0, 14,
         strokeColor : "#000000",
         fillColor : "#CC3333"
     }
-), 20, 10, 30, 1, 20, 500, "submachinae");
+), 20, 20, 30, 1, 20, 500, "submachinae", bulletSound2);
 
 var cannonWeapon = new Weapon(new thing(0, 0, 20,
     {
@@ -255,16 +270,59 @@ var cannonWeapon = new Weapon(new thing(0, 0, 20,
         strokeColor : "#000000",
         fillColor : "#009966"
     }
-), 20, 10, 100, 5, 8, 500, "cannon");
+), 20, 50, 100, 5, 8, 500, "cannon", bulletSound3);
 
-var weaponList = [pistolWeapon, subMachineWeapon, cannonWeapon];
+var shotGunWeapon = new Weapon(new thing(0, 0, 12,
+    {
+        lineWidth : 1,
+        strokeColor : "#000000",
+        fillColor : "#666666"
+    }
+), 20, 15, 200, 1, 5, 500, "shotGun", bulletSound4,
+function (x, y, drct) {
+    playSound(this.sound);
+    var rotateRes;
+
+    rotateRes = rotateVec(drct.x, drct.y, 0);
+    this.bullet.x = x + rotateRes.x * hero.main.r;
+    this.bullet.y = y + rotateRes.y * hero.main.r;
+    var mbullet2 = getBulletEntry(deepCloneThing(this.bullet), this.fspeed, this.ftime, this.damage, deepClone(rotateRes));
+    bulletBox.push(mbullet2);
+
+    rotateRes = rotateVec(drct.x, drct.y, 15);
+    this.bullet.x = x + rotateRes.x * hero.main.r;
+    this.bullet.y = y + rotateRes.y * hero.main.r;
+    var mbullet2 = getBulletEntry(deepCloneThing(this.bullet), this.fspeed, this.ftime, this.damage, deepClone(rotateRes));
+    bulletBox.push(mbullet2);
+
+    rotateRes = rotateVec(drct.x, drct.y, 30);
+    this.bullet.x = x + rotateRes.x * hero.main.r;
+    this.bullet.y = y + rotateRes.y * hero.main.r;
+    var mbullet3 = getBulletEntry(deepCloneThing(this.bullet), this.fspeed, this.ftime, this.damage, deepClone(rotateRes));
+    bulletBox.push(mbullet3);
+
+    rotateRes = rotateVec(drct.x, drct.y, -15);
+    this.bullet.x = x + rotateRes.x * hero.main.r;
+    this.bullet.y = y + rotateRes.y * hero.main.r;
+    var mbullet4 = getBulletEntry(deepCloneThing(this.bullet), this.fspeed, this.ftime, this.damage, deepClone(rotateRes));
+    bulletBox.push(mbullet4);
+
+    rotateRes = rotateVec(drct.x, drct.y, -30);
+    this.bullet.x = x + rotateRes.x * hero.main.r;
+    this.bullet.y = y + rotateRes.y * hero.main.r;
+    var mbullet5 = getBulletEntry(deepCloneThing(this.bullet), this.fspeed, this.ftime, this.damage, deepClone(rotateRes));
+    bulletBox.push(mbullet5);
+
+});
+
+var weaponList = [pistolWeapon, subMachineWeapon, cannonWeapon, shotGunWeapon];
 
 /**
 REWARD
  */
 var rewardGenerateRadius = 300;
 var rewardRadius = 30;
-var rewardGenerateTimePeriod = 20;
+var rewardGenerateTimePeriod = 5;
 
 /**
 MONSTER
@@ -337,9 +395,52 @@ var monsterClass5 = {
 
 var monsterClassList = [monsterClass1, monsterClass2, monsterClass3, monsterClass4, monsterClass5];
 var monsterProb = [0.2, 0.2, 0.2, 0.2, 0.2];
-var monsterGenerateTimePeriod = 400;
+var monsterGenerateTimePeriod = 100;
+
+/**
+Option
+ */
+var newGameOption = new Option(
+    new thing(5200, 5200, 50,
+        {
+            lineWidth : 3,
+            strokeColor : "#333300",
+            fillColor : "#CCCC99"
+        }),
+    "New Game",
+    1
+);
+
+var continueGameOption = new Option(
+    new thing(5700, 5700, 50,
+        {
+            lineWidth : 3,
+            strokeColor : "#333300",
+            fillColor : "#FFFFCC"
+        }),
+    "Continue",
+    2
+);
+
+var testGameOption = new Option(
+    new thing(5700, 5700, 50,
+        {
+            lineWidth : 3,
+            strokeColor : "#333300",
+            fillColor : "#FFCCCC"
+        }),
+    "Test",
+    3
+);
 
 
+var gameState = 0;
+var testMode = 0;
+/*
+0 : new game start
+1 : play
+2 : stop
+ */
 
 
 

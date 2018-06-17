@@ -17,6 +17,7 @@ function Reward(outer, main, type) {
 function getRandomType() {
     var count = 3;
     var rdn = Math.floor(Math.random() * (count+1));
+    rdn = 0;
     var ret = {id : rdn};
     if (rdn == 0){
         ret["weapon"] = Math.floor(Math.random() * (weaponList.length));
@@ -66,4 +67,11 @@ function refreshRewardBox(){
         }
     }
     return isChanged;
+}
+
+function rewardInit() {
+    while (rewardBox.length != 0){
+        var reward = rewardBox.pop();
+        rewardPool.push(reward);
+    }
 }

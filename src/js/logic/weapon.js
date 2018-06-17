@@ -1,4 +1,4 @@
-function Weapon(bullet, fspeed, ftime, aspeed, damage, capacity, cspeed, name) {
+function Weapon(bullet, fspeed, ftime, aspeed, damage, capacity, cspeed, name, sound, fire) {
     this.bullet = bullet;
     this.fspeed = fspeed;//飞行速度
     this.ftime  =  ftime;//飞行时间
@@ -7,17 +7,28 @@ function Weapon(bullet, fspeed, ftime, aspeed, damage, capacity, cspeed, name) {
     this.capacity = capacity;
     this.cspeed = cspeed;//换子弹速度
     this.name = name;
+    this.sound = sound;
 
     this.fire = function (x, y, drct) {
+        playSound(this.sound);
         this.bullet.x = x + drct.x * hero.main.r;
         this.bullet.y = y + drct.y * hero.main.r;
+
+        var ndrct = deepClone(drct);
+
+
         var mbullet = getBulletEntry(deepCloneThing(this.bullet), this.fspeed, this.ftime, this.damage, drct);
         bulletBox.push(mbullet);
+    };
+    if (fire != null){
+        this.fire = fire;
+        //console.log(this.fire);
     }
+
 }
 
 function deepCloneWeapon(wea) {
-    return new Weapon(deepCloneThing(wea.bullet), wea.fspeed, wea.ftime, wea.aspeed, wea.damage, wea.capacity, wea.cspeed, wea.name);
+    return new Weapon(deepCloneThing(wea.bullet), wea.fspeed, wea.ftime, wea.aspeed, wea.damage, wea.capacity, wea.cspeed, wea.name, wea.sound, wea.fire);
 }
 
 function Bullet(bullet, fspeed, ftime, damage, drct) {
@@ -74,4 +85,11 @@ function refreshBulletBox() {
     return changed;
     //console.log("refresh", bulletBox);
     //console.log(bulletPool);
+}
+
+function bulletInit() {
+    while (bulletBox.length != 0){
+        var bullet = bulletBox.pop();
+        bulletPool.push(bullet);
+    }
 }

@@ -29,3 +29,17 @@ function colliBullet2Monster() {
         }
     }
 }
+
+function colliOption2Hero() {
+    if (newGameOption.isOn == true && isCollided(hero.main, newGameOption.main) == true){
+        //console.log(newGameOption);
+        return newGameOption.opType;
+    }
+    else if (continueGameOption.isOn == true && isCollided(hero.main, continueGameOption.main) == true){
+        return continueGameOption.opType;
+    }
+    else if (testGameOption.isOn == true && isCollided(hero.main, testGameOption.main) == true){
+        return testGameOption.opType;
+    }
+    else return 0;
+}
