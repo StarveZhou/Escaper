@@ -21,4 +21,8 @@ blankspace / mouse click | fire
 
 * 更智能的ai
 
-* 鼠标定位不准确
+* ~~鼠标定位不准确 修复~~
+
+* ~~增加界面~~
+
+* ~~修复reward显示问题~~
