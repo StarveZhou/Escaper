@@ -17,7 +17,6 @@ function Reward(outer, main, type) {
 function getRandomType() {
     var count = 3;
     var rdn = Math.floor(Math.random() * (count+1));
-    rdn = 0;
     var ret = {id : rdn};
     if (rdn == 0){
         ret["weapon"] = Math.floor(Math.random() * (weaponList.length));
@@ -51,6 +50,8 @@ function getRewardEntry() {
         var pos = randomPos(hero.main.x, hero.main.y, rewardGenerateRadius);
         reward.main.x = pos.x;
         reward.main.y = pos.y;
+        reward.outer.x = pos.x;
+        reward.outer.y = pos.y;
         reward.isPicked = false;
         return reward;
     }
