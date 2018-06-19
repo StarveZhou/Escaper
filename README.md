@@ -12,6 +12,9 @@ d / right arrow | move right
 q / e | change weapon
 r | reload
 blankspace / mouse click | fire 
+enter | pasue
+n | new a monster(test mode)
+m | new a reward(test mode)
 
 有待修复：
 
